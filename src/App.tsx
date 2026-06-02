@@ -1,49 +1,22 @@
-import { ScrollProvider } from '@/lib/ScrollProvider'
-import { Experience } from '@/three/Experience'
-import { Preloader } from '@/components/Preloader'
-import { CursorGlow } from '@/components/CursorGlow'
-import { Nav } from '@/components/Nav'
-import { Hero } from '@/components/sections/Hero'
-import { Problem } from '@/components/sections/Problem'
-import { Idea } from '@/components/sections/Idea'
-import { Features } from '@/components/sections/Features'
-import { Feeling } from '@/components/sections/Feeling'
-import { Social } from '@/components/sections/Social'
-import { FinalCTA } from '@/components/sections/FinalCTA'
-import { Footer } from '@/components/sections/Footer'
+import { lazy, Suspense } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import Home from './pages/Home'
+
+// Legal pages are light and rarely visited → load them on demand.
+const Legal = lazy(() => import('./pages/Legal'))
 
 export default function App() {
   return (
-    <ScrollProvider>
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
-      >
-        Skip to content
-      </a>
-
-      <Preloader />
-      <CursorGlow />
-
-      {/* one persistent 3D canvas behind everything */}
-      <Experience />
-
-      <Nav />
-
-      <main id="main">
-        <Hero />
-        <Problem />
-        <Idea />
-        <Features />
-        <Feeling />
-        <Social />
-        <FinalCTA />
-      </main>
-
-      <Footer />
-
-      {/* printed-paper grain over the whole page */}
-      <div className="grain" aria-hidden="true" />
-    </ScrollProvider>
+    <BrowserRouter>
+      <Suspense fallback={<div className="min-h-screen bg-paper" />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/terms" element={<Legal slug="terms" />} />
+          <Route path="/privacy" element={<Legal slug="privacy" />} />
+          {/* unknown paths → home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   )
 }

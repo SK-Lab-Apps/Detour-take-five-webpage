@@ -22,9 +22,9 @@ export const site = {
   links: {
     appStore: '{{APP_STORE_URL}}',
     playStore: '{{PLAY_STORE_URL}}',
-    // Optional secondary links (footer). Leave '' to hide.
+    // Optional secondary footer links. Leave '' to hide.
+    // (Terms & Privacy are built-in pages at /terms and /privacy — see src/content/legal.ts.)
     support: '',
-    privacy: '',
     instagram: '',
   },
 

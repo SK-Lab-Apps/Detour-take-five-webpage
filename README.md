@@ -58,7 +58,8 @@ Almost everything you'll want to edit lives in **one file**:
 - **Store URLs** → `links.appStore` / `links.playStore`. They're set to `{{APP_STORE_URL}}`
   / `{{PLAY_STORE_URL}}` placeholders; until you paste real URLs the buttons render but stay
   inert (with a tooltip), so nothing links nowhere.
-- **Footer links** → `links.support` / `links.privacy` / `links.instagram` (empty = hidden).
+- **Footer links** → Terms/Privacy are always shown (internal pages). Optional extras
+  `links.support` / `links.instagram` appear when set (empty = hidden).
 - **Section copy, tiers, features, stats** → the `hero`, `problem`, `idea`, `features`,
   `feeling`, `finalCta`, `footer` objects.
 - **Testimonials / ratings / press** → `social.*` (these are clearly-marked placeholders —
@@ -85,6 +86,19 @@ Almost everything you'll want to edit lives in **one file**:
 - **`src/three/Particles.tsx`** — the particle field shader (drift → vortex → menu).
 - **`src/three/Scene.tsx`** — camera path, background grade, warm glow.
 - **`src/three/Canvas3D.tsx`** — canvas settings + post-processing (bloom/vignette).
+
+### Legal pages (Terms of Service / Privacy Policy)
+- Live at **`/terms`** and **`/privacy`** (real routes — directly linkable, refresh-safe), and
+  are linked in the footer.
+- Content + the editable constants are in **`src/content/legal.ts`**. Before launch, set:
+  - `contactEmail` — your real support email (shown on both pages)
+  - `governingLaw` — your jurisdiction (used in the Terms)
+  - `lastUpdated` — the date string
+  - These are general, plain-language docs adapted to a **local-first wellness app** (no
+    accounts, on-device data, store-handled subscriptions). Have a lawyer review for your
+    jurisdiction if you need certainty.
+- Routing uses `react-router-dom`. Direct-URL access on static hosts is handled by
+  `public/_redirects` (Netlify) and `vercel.json` (Vercel) — both included.
 
 ### Analytics
 - No third-party scripts ship by default. Drop your snippet (Plausible / Fathom / GA) into the
@@ -138,8 +152,10 @@ No env vars or secrets are required.
 5. **Feeling stats** (`feeling.stats`) — swap for real numbers if you have them.
 6. **Domain** — replace `https://detourtakefive.app/` in `index.html`, `sitemap.xml`,
    `robots.txt`.
-7. **(Optional)** more app screenshots in `public/screens/` and extra `<DeviceFrame>`s.
-8. **(Optional)** analytics snippet in `index.html`.
+7. **Legal pages** — set `contactEmail`, `governingLaw`, and `lastUpdated` in
+   `src/content/legal.ts` (and have a lawyer review the wording for your jurisdiction).
+8. **(Optional)** more app screenshots in `public/screens/` and extra `<DeviceFrame>`s.
+9. **(Optional)** analytics snippet in `index.html`.
 
 > The store-badge artwork is a clean, faithful recreation of the Apple/Google badges. If you
 > need the pixel-exact official badges, download them from Apple/Google and drop them into

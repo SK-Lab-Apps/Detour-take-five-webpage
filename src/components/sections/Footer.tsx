@@ -1,12 +1,14 @@
+import { Link } from 'react-router-dom'
 import { site } from '@/content/site'
 
 export function Footer() {
   const { footer, links } = site
   const year = new Date().getFullYear()
-  const secondary = (
+
+  // Optional external links (set in site.ts). Internal legal pages are always shown.
+  const external = (
     [
       ['Support', links.support],
-      ['Privacy', links.privacy],
       ['Instagram', links.instagram],
     ] as const
   )
@@ -24,15 +26,25 @@ export function Footer() {
           </div>
         </div>
 
-        {secondary.length > 0 && (
-          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-soft">
-            {secondary.map((l) => (
-              <a key={l.label} href={l.href} className="transition-colors hover:text-terracotta">
-                {l.label}
-              </a>
-            ))}
-          </nav>
-        )}
+        <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-ink-soft">
+          <Link to="/terms" className="transition-colors hover:text-terracotta">
+            Terms of Service
+          </Link>
+          <Link to="/privacy" className="transition-colors hover:text-terracotta">
+            Privacy Policy
+          </Link>
+          {external.map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-terracotta"
+            >
+              {l.label}
+            </a>
+          ))}
+        </nav>
 
         <div className="text-xs text-ink-muted">
           © {year} {footer.legal}
