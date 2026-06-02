@@ -11,6 +11,7 @@ export function FinalCTA() {
       data-section="cta"
       className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 text-center"
     >
+      <div className="text-haze flex flex-col items-center">
       <Reveal>
         <img
           src="/brand/app-icon.png"
@@ -37,8 +38,9 @@ export function FinalCTA() {
         </div>
       </Reveal>
       <Reveal delay={0.28}>
-        <p className="mt-5 text-xs uppercase tracking-[0.2em] text-ink-muted">{finalCta.foot}</p>
+        <p className="mt-5 text-xs uppercase tracking-[0.2em] text-ink-soft">{finalCta.foot}</p>
       </Reveal>
+      </div>
     </section>
   )
 }

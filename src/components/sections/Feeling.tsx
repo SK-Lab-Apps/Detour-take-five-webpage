@@ -6,7 +6,7 @@ export function Feeling() {
   const { feeling } = site
   return (
     <Section id="feeling">
-      <div className="mx-auto max-w-3xl text-center">
+      <div className="text-haze mx-auto max-w-3xl text-center">
         <Reveal>
           <Eyebrow>{feeling.eyebrow}</Eyebrow>
         </Reveal>
@@ -23,10 +23,10 @@ export function Feeling() {
           {feeling.stats.map((s, i) => (
             <Reveal key={s.label} delay={0.1 + i * 0.08}>
               <div>
-                <div className="font-display text-[clamp(1.8rem,5vw,3rem)] font-light text-terracotta">
+                <div className="font-display text-[clamp(1.8rem,5vw,3rem)] font-light text-ink">
                   {s.value}
                 </div>
-                <div className="mt-1 text-xs uppercase tracking-[0.14em] text-ink-muted">
+                <div className="mt-1 text-xs uppercase tracking-[0.14em] text-ink-soft">
                   {s.label}
                 </div>
               </div>

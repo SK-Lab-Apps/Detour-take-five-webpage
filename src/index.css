@@ -134,6 +134,27 @@
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-paper);
   }
+
+  /* Invisible "paper haze" behind text so copy always reads over the warm 3D galaxy,
+     without a visible box. A soft, blurred radial of paper, sat just behind the text. */
+  .text-haze {
+    position: relative;
+    isolation: isolate;
+  }
+  .text-haze::before {
+    content: '';
+    position: absolute;
+    inset: -12% -8%;
+    z-index: -1;
+    background: radial-gradient(
+      62% 60% at 50% 48%,
+      rgba(250, 244, 232, 0.72),
+      rgba(250, 244, 232, 0.42) 45%,
+      rgba(250, 244, 232, 0) 75%
+    );
+    filter: blur(10px);
+    pointer-events: none;
+  }
 }
 
 /* Fine film grain over the whole page for that printed-paper warmth.

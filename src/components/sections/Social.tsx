@@ -18,7 +18,7 @@ export function Social() {
   const { social } = site
   return (
     <Section id="loved" full={false} className="py-28 sm:py-32">
-      <div className="mx-auto mb-12 max-w-2xl text-center">
+      <div className="text-haze mx-auto mb-12 max-w-2xl text-center">
         <Reveal>
           <Eyebrow>{social.eyebrow}</Eyebrow>
         </Reveal>

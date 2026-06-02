@@ -2,21 +2,20 @@ import { useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { journey, pointer } from './journey'
-import { C, TIER_COLORS } from './colors'
+import { C } from './colors'
 
 /**
  * Particles — the single morphing object that carries the whole story.
  *
  * Three target states, blended by `journey`:
- *   drift  (calm, wide, warm)         → the hero / idle
- *   vortex (cold, tight, frantic)     → the doomscroll problem  (uChaos → 1)
- *   menu   (three warm tier rows)     → the resolved menu       (uGather → 1)
+ *   drift   (calm, wide, warm starfield)        → the hero / idle
+ *   vortex  (cold, tight, frantic storm)        → the doomscroll problem  (uChaos → 1)
+ *   galaxy  (a slowly-turning warm spiral)      → the calm resolution     (uGather → 1)
  *
- * position = mix( mix(drift, vortex, chaos), menu, gather )
+ * position = mix( mix(drift, vortex, chaos), galaxy, gather )
  *
- * One draw call (THREE.Points). All morph math is on the GPU. Colors stay "ink on warm
- * paper" — darker, saturated tokens rather than neon, so they read on the light background
- * and match the app's printed-menu language.
+ * Colour is a warm sunset gradient by radius (gold core → terracotta → dusty rose), graded
+ * cold→warm by `uWarmth`. No flat yellow, no hard colour bands — one cohesive, living field.
  */
 const vert = /* glsl */ `
   uniform float uTime;
@@ -24,66 +23,64 @@ const vert = /* glsl */ `
   uniform float uGather;
   uniform float uSize;
   uniform float uPixelRatio;
-  uniform float uFocus;
   uniform vec2  uPointer;
 
   attribute vec3  aDrift;
-  attribute vec3  aHome;
+  attribute vec3  aDisc;   // base spiral-disc point (xz plane, y = thickness)
   attribute float aSeed;
-  attribute float aTier;
+  attribute float aTone;   // 0 (core) .. 1 (rim) for the colour gradient
 
-  varying float vTier;
+  varying float vTone;
   varying float vSeed;
   varying float vGather;
-  varying float vHi;
+  varying float vDepth;
 
-  // calm, wide ambient cloud — slow breathing
-  vec3 driftPos(vec3 base, float seed, float t) {
+  vec3 rotY(vec3 p, float a){ float c=cos(a), s=sin(a); return vec3(c*p.x + s*p.z, p.y, -s*p.x + c*p.z); }
+  vec3 rotX(vec3 p, float a){ float c=cos(a), s=sin(a); return vec3(p.x, c*p.y - s*p.z, s*p.y + c*p.z); }
+
+  vec3 driftPos(vec3 base, float seed, float t){
     return base + vec3(
-      sin(t * 0.25 + seed * 11.0) * 0.45,
-      cos(t * 0.22 + seed * 7.0) * 0.45,
-      sin(t * 0.2 + seed * 5.0) * 0.35
+      sin(t*0.22 + seed*11.0)*0.5,
+      cos(t*0.20 + seed*7.0)*0.5,
+      sin(t*0.18 + seed*5.0)*0.4
     );
   }
 
-  // a swirling cold funnel of shards
-  vec3 vortexPos(float seed, float t) {
-    float a = seed * 6.2831853 + t * (0.5 + seed * 0.7);
-    float r = 1.6 + 3.2 * fract(seed * 7.137);
-    r *= 0.7 + 0.5 * sin(t * 0.6 + seed * 19.0);
-    float y = (fract(seed * 31.7) - 0.5) * 8.0 + sin(t * 0.9 + seed * 10.0) * 0.8;
-    return vec3(cos(a) * r, y, sin(a) * r - 0.5);
+  // a cold tunnel being sucked toward the camera — the endless feed pulling you in
+  vec3 vortexPos(float seed, float t){
+    float a = seed*6.2831853 + t*(0.8 + seed*0.6);
+    float zc = fract(seed*13.17 + t*0.085);          // 0..1 stream cycle, far -> near
+    float z = mix(-12.0, 4.0, zc);
+    float r = (0.5 + 2.4*fract(seed*7.137)) * (0.32 + 0.9*zc); // funnel widens as it nears
+    return vec3(cos(a)*r, sin(a)*r, z);
   }
 
-  void main() {
+  void main(){
     vSeed = aSeed;
-    vTier = aTier;
-
+    vTone = aTone;
     float c = smoothstep(0.0, 1.0, uChaos);
     float g = smoothstep(0.0, 1.0, uGather);
     vGather = g;
 
-    vec3 drift = driftPos(aDrift, aSeed, uTime);
+    vec3 drift  = driftPos(aDrift, aSeed, uTime);
     vec3 vortex = vortexPos(aSeed, uTime);
-    vec3 home = aHome + vec3(
-      sin(uTime * 0.7 + aSeed * 12.0) * 0.04,
-      cos(uTime * 0.8 + aSeed * 9.0) * 0.04,
-      0.0
-    );
+
+    // galaxy: spin the disc in-plane, tilt it toward camera, breathe gently
+    vec3 gal = rotY(aDisc, uTime*0.05);
+    gal = rotX(gal, 0.42);
+    gal += vec3(0.0, sin(uTime*0.6 + aSeed*9.0)*0.05, 0.0);
 
     vec3 base = mix(drift, vortex, c);
-    vec3 pos = mix(base, home, g);
-
-    // a soft highlight sweep across the menu rows during the features beat
-    float sweep = smoothstep(0.12, 0.0, abs((aHome.x / 5.0 * 0.5 + 0.5) - uFocus));
-    vHi = sweep * g;
+    vec3 pos  = mix(base, gal, g);
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
-    mv.xy += uPointer * (0.16 + 0.12 * aSeed) * (-mv.z * 0.016);
+    mv.xy += uPointer * (0.20 + 0.18*aSeed) * (-mv.z*0.02);   // depth parallax
     gl_Position = projectionMatrix * mv;
 
-    float size = uSize * (0.5 + aSeed * 0.75) * (0.72 + g * 0.95 + vHi * 0.5);
-    gl_PointSize = size * uPixelRatio * (300.0 / max(-mv.z, 0.1));
+    vDepth = clamp((-mv.z - 6.0) / 10.0, 0.0, 1.0);
+    float size = uSize * (0.45 + aSeed*0.8) * (0.5 + g*0.9) * (1.0 - 0.35*vDepth);
+    gl_PointSize = min(size * uPixelRatio * (320.0 / max(-mv.z, 0.1)), 46.0 * uPixelRatio);
+    if (mv.z > -0.05) gl_PointSize = 0.0; // cull anything that streamed behind the camera
   }
 `
 
@@ -91,32 +88,34 @@ const frag = /* glsl */ `
   precision highp float;
   uniform float uWarmth;
   uniform vec3  uCold;
-  uniform vec3  uWarmBase;
-  uniform vec3  uT0;
-  uniform vec3  uT1;
-  uniform vec3  uT2;
+  uniform vec3  uCore;   // gold
+  uniform vec3  uMid;    // terracotta
+  uniform vec3  uRim;    // dusty rose / plum
+  uniform float uGlow;
 
-  varying float vTier;
+  varying float vTone;
   varying float vSeed;
   varying float vGather;
-  varying float vHi;
+  varying float vDepth;
 
-  void main() {
+  void main(){
     vec2 uv = gl_PointCoord - 0.5;
     float d = length(uv);
-    float alpha = smoothstep(0.5, 0.07, d);
+    float alpha = smoothstep(0.5, 0.06, d);
     if (alpha < 0.01) discard;
-    float core = smoothstep(0.3, 0.0, d);
+    float core = smoothstep(0.34, 0.0, d);
 
-    vec3 tierCol = vTier < 0.5 ? uT0 : (vTier < 1.5 ? uT1 : uT2);
-    // dispersed particles stay warm-neutral; tier color only emerges as they gather
-    vec3 warm = mix(uWarmBase, tierCol, 0.12 + 0.72 * vGather);
+    // Dispersed (hero/idle) → a calm pale warm cream, so the hero is airy and light.
+    // Assembled galaxy → the full warm sunset gradient (gold core → terracotta → rose rim).
+    vec3 galaxyCol = vTone < 0.5 ? mix(uCore, uMid, vTone*2.0) : mix(uMid, uRim, (vTone-0.5)*2.0);
+    vec3 dispersed = mix(uCore, vec3(0.97, 0.91, 0.80), 0.55);
+    vec3 warm = mix(dispersed, galaxyCol, vGather);
     vec3 col = mix(uCold, warm, uWarmth);
-    // gathered tokens get a soft bright core; sweep adds a kiss of light
-    col = mix(col, mix(col, vec3(1.0, 0.96, 0.86), 0.6), core * (vGather * 0.25 + vHi * 0.5));
+    // gathered cores pick up a soft inner light
+    col = mix(col, mix(col, vec3(1.0,0.96,0.88), 0.5), core * (vGather*0.3 + uGlow*0.2));
 
-    float a = alpha * mix(0.32, 0.95, vGather);
-    a *= 0.6 + 0.4 * vSeed; // gentle density variation
+    float a = alpha * mix(0.16, 0.92, vGather) * (1.0 - 0.25*vDepth);
+    a *= 0.55 + 0.45*vSeed;
     gl_FragColor = vec4(col, a);
   }
 `
@@ -128,43 +127,42 @@ export function Particles({ count }: { count: number }) {
   const geo = useMemo(() => {
     const g = new THREE.BufferGeometry()
     const drift = new Float32Array(count * 3)
-    const home = new Float32Array(count * 3)
+    const disc = new Float32Array(count * 3)
     const pos = new Float32Array(count * 3)
     const seed = new Float32Array(count)
-    const tier = new Float32Array(count)
+    const tone = new Float32Array(count)
 
-    // Menu layout: three horizontal tier rows of tokens.
-    const rowsY = [1.35, 0.0, -1.35]
-    const spanX = 5.0
-
+    const R = 3.2
     for (let i = 0; i < count; i++) {
-      const t = i % 3
-      // ── drift: a calm, wide cloud shell (kept off dead-center so text reads) ──
-      const theta = Math.random() * Math.PI * 2
-      const phi = Math.acos(2 * Math.random() - 1)
-      const rad = 4.6 + Math.random() * 3.6
-      drift[i * 3] = Math.sin(phi) * Math.cos(theta) * rad * 1.25
-      drift[i * 3 + 1] = (Math.cos(phi) * rad) * 0.7
-      drift[i * 3 + 2] = Math.sin(phi) * Math.sin(theta) * rad - 1.0
+      // ── drift: a wide calm starfield shell (kept off dead-centre so text reads) ──
+      const th = Math.random() * Math.PI * 2
+      const ph = Math.acos(2 * Math.random() - 1)
+      const rad = 4.8 + Math.random() * 3.8
+      drift[i * 3] = Math.sin(ph) * Math.cos(th) * rad * 1.3
+      drift[i * 3 + 1] = Math.cos(ph) * rad * 0.7
+      drift[i * 3 + 2] = Math.sin(ph) * Math.sin(th) * rad - 1.0
 
-      // ── menu home: tier rows, lightly clustered into tokens ──
-      const u = Math.random()
-      home[i * 3] = (u - 0.5) * spanX + (Math.random() - 0.5) * 0.3
-      home[i * 3 + 1] = rowsY[t] + (Math.random() - 0.5) * 0.6
-      home[i * 3 + 2] = (Math.random() - 0.5) * 1.1
+      // ── galaxy: a spiral disc (xz plane), denser/thicker at the core ──
+      const rr = 0.35 + R * Math.sqrt(Math.random())
+      const arm = rr * 0.9 // spiral twist
+      const ang = Math.random() * Math.PI * 2 + arm
+      const thick = (Math.random() - 0.5) * (0.55 + 0.7 * (1 - rr / R))
+      disc[i * 3] = Math.cos(ang) * rr
+      disc[i * 3 + 1] = thick
+      disc[i * 3 + 2] = Math.sin(ang) * rr
 
       pos[i * 3] = drift[i * 3]
       pos[i * 3 + 1] = drift[i * 3 + 1]
       pos[i * 3 + 2] = drift[i * 3 + 2]
       seed[i] = Math.random()
-      tier[i] = t
+      tone[i] = Math.min(1, rr / R + (Math.random() - 0.5) * 0.15)
     }
 
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3))
     g.setAttribute('aDrift', new THREE.BufferAttribute(drift, 3))
-    g.setAttribute('aHome', new THREE.BufferAttribute(home, 3))
+    g.setAttribute('aDisc', new THREE.BufferAttribute(disc, 3))
     g.setAttribute('aSeed', new THREE.BufferAttribute(seed, 1))
-    g.setAttribute('aTier', new THREE.BufferAttribute(tier, 1))
+    g.setAttribute('aTone', new THREE.BufferAttribute(tone, 1))
     return g
   }, [count])
 
@@ -174,15 +172,14 @@ export function Particles({ count }: { count: number }) {
       uChaos: { value: journey.chaos },
       uGather: { value: journey.gather },
       uWarmth: { value: journey.warmth },
-      uFocus: { value: 0 },
-      uSize: { value: 8.0 },
+      uGlow: { value: 0 },
+      uSize: { value: 8.5 },
       uPixelRatio: { value: Math.min(gl.getPixelRatio(), 2) },
       uPointer: { value: new THREE.Vector2(0, 0) },
       uCold: { value: C.steel.clone() },
-      uWarmBase: { value: new THREE.Color('#e9cd9a') },
-      uT0: { value: TIER_COLORS[0].clone() },
-      uT1: { value: TIER_COLORS[1].clone() },
-      uT2: { value: TIER_COLORS[2].clone() },
+      uCore: { value: new THREE.Color('#ffd29a') }, // warm gold core
+      uMid: { value: new THREE.Color('#d2643a') }, // terracotta
+      uRim: { value: new THREE.Color('#9c5a73') }, // dusty plum-rose rim
     }),
     [gl],
   )
@@ -194,8 +191,7 @@ export function Particles({ count }: { count: number }) {
     u.uChaos.value += (journey.chaos - u.uChaos.value) * k
     u.uGather.value += (journey.gather - u.uGather.value) * k
     u.uWarmth.value += (journey.warmth - u.uWarmth.value) * k
-    // focus sweeps 0→1 across the features beat
-    u.uFocus.value += (journey.focus - u.uFocus.value) * k
+    u.uGlow.value += (journey.bloom - u.uGlow.value) * k
     u.uPointer.value.x += (pointer.x - u.uPointer.value.x) * k
     u.uPointer.value.y += (pointer.y - u.uPointer.value.y) * k
   })

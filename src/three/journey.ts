@@ -29,10 +29,10 @@ export interface Journey {
 
 export const journey: Journey = {
   p: 0,
-  chaos: 0.15,
-  warmth: 0.55,
-  gather: 0.16,
-  bloom: 0.32,
+  chaos: 0.12,
+  warmth: 0.72,
+  gather: 0.14,
+  bloom: 0.3,
   cam: 0,
   focus: 0,
 }

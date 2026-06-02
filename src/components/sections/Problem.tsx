@@ -19,7 +19,7 @@ export function Problem() {
           </p>
         </Reveal>
         <Reveal delay={0.18}>
-          <p className="mt-10 font-display text-xl italic text-ink-muted sm:text-2xl">
+          <p className="mt-10 font-display text-xl italic text-ink-soft sm:text-2xl">
             {problem.pull}
           </p>
         </Reveal>
