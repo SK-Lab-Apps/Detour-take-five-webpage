@@ -1,0 +1,13 @@
+{
+  "name": "Detour — Take Five",
+  "short_name": "Detour",
+  "description": "A menu of things you'd rather do than scroll.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F3ECDA",
+  "theme_color": "#FAF4E8",
+  "icons": [
+    { "src": "/brand/splash-icon.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/brand/app-icon.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

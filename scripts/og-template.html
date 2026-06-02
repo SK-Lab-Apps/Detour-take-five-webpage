@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #2a1f18;
+    background:
+      radial-gradient(60% 70% at 50% 30%, rgba(210,100,58,0.10), rgba(210,100,58,0) 70%),
+      radial-gradient(70% 60% at 85% 95%, rgba(201,154,43,0.12), rgba(201,154,43,0) 70%),
+      linear-gradient(180deg, #faf4e8 0%, #f3ecda 100%);
+    width: 1200px; height: 630px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .frame {
+    position: absolute; inset: 40px; border: 1px solid rgba(42,31,24,0.16);
+    border-radius: 10px;
+  }
+  .frame::before, .frame::after {
+    content: ''; position: absolute; width: 18px; height: 18px;
+    border: 1px solid rgba(42,31,24,0.28);
+  }
+  .frame::before { left: 14px; top: 14px; border-right: 0; border-bottom: 0; }
+  .frame::after { right: 14px; bottom: 14px; border-left: 0; border-top: 0; }
+  .wrap { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .icon { width: 96px; height: 96px; border-radius: 22px; border: 1px solid rgba(42,31,24,0.12);
+    box-shadow: 0 18px 40px -18px rgba(42,31,24,0.4); margin-bottom: 26px; }
+  .eyebrow { font-family: -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase; color: #a84a26; }
+  .title { font-size: 132px; line-height: 1; letter-spacing: -4px; margin: 14px 0 6px; }
+  .sub { font-family: -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700;
+    letter-spacing: 0.32em; text-transform: uppercase; color: #8a7b6d; }
+  .tag { font-size: 30px; font-style: italic; color: #5a4a3d; margin-top: 26px; }
+  .dots { display: flex; gap: 28px; margin-top: 34px; font-family: -apple-system, Helvetica, Arial, sans-serif;
+    font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #8a7b6d; }
+  .dot { display: flex; align-items: center; gap: 9px; }
+  .dot i { width: 11px; height: 11px; border-radius: 99px; display: inline-block; }
+</style>
+</head>
+<body>
+  <div class="frame"></div>
+  <div class="wrap">
+    <img class="icon" src="../public/brand/app-icon.png" />
+    <div class="eyebrow">Est. Today</div>
+    <div class="title">Detour</div>
+    <div class="sub">Take Five</div>
+    <div class="tag">A menu of things you’d rather do than scroll.</div>
+    <div class="dots">
+      <span class="dot"><i style="background:#c99a2b"></i>Starters</span>
+      <span class="dot"><i style="background:#4f6b3a"></i>Mains</span>
+      <span class="dot"><i style="background:#8b4060"></i>Desserts</span>
+    </div>
+  </div>
+</body>
+</html>

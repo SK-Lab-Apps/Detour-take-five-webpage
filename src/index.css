@@ -1,0 +1,165 @@
+@import 'tailwindcss';
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Design tokens — derived from the app (see THEME.md). Tailwind v4 reads these
+   from @theme and generates utilities (bg-paper, text-ink, text-terracotta…).
+   ──────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* paper / surfaces */
+  --color-paper: #faf4e8;
+  --color-paper-deep: #f2e9d6;
+  --color-splash: #f3ecda;
+  --color-card: #fffcf5;
+  --color-cream: #f7ebd0;
+
+  /* ink / text */
+  --color-ink: #2a1f18;
+  --color-ink-soft: #5a4a3d;
+  --color-ink-muted: #8a7b6d;
+
+  /* accents */
+  --color-terracotta: #d2643a;
+  --color-terracotta-deep: #a84a26;
+  --color-mustard: #c99a2b;
+  --color-forest: #4f6b3a;
+  --color-plum: #8b4060;
+  --color-danger: #a8392a;
+
+  /* hairlines */
+  --color-hair: rgba(42, 31, 24, 0.08);
+  --color-hair-strong: rgba(42, 31, 24, 0.16);
+
+  /* fonts (self-hosted variable fonts, imported in main.tsx) */
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  /* radii */
+  --radius-card: 1.125rem;
+  --radius-xl2: 1.75rem;
+
+  /* warm, soft shadow language (never hard black) */
+  --shadow-paper: 0 10px 30px -12px rgba(42, 31, 24, 0.18);
+  --shadow-lift: 0 24px 60px -24px rgba(42, 31, 24, 0.28);
+
+  /* easing */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Base
+   ──────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    color-scheme: light;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  html {
+    /* Lenis drives smooth scroll; keep native behavior off to avoid double-easing. */
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    overflow-x: hidden;
+  }
+
+  /* Lenis */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-terracotta) 30%, transparent);
+    color: var(--color-ink);
+  }
+
+  /* keyboard focus — terracotta ring, never removed */
+  :focus-visible {
+    outline: 2px solid var(--color-terracotta);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Components / reusable bits of the menu language
+   ──────────────────────────────────────────────────────────────────────────── */
+@layer components {
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-terracotta-deep);
+  }
+
+  .menu-label {
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+  }
+
+  /* dotted leader, like a printed menu */
+  .leader {
+    flex: 1 1 auto;
+    border-bottom: 1px dotted var(--color-hair-strong);
+    margin: 0 0.5rem 0.35rem;
+  }
+
+  /* premium paper card */
+  .card-paper {
+    background: var(--color-card);
+    border: 1px solid var(--color-hair);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-paper);
+  }
+}
+
+/* Fine film grain over the whole page for that printed-paper warmth.
+   Rendered once as a fixed overlay; cheap and GPU-composited. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Respect reduced motion: kill long transitions/animations site-wide.
+   (Components also branch on the prefers-reduced-motion hook for richer fallbacks.) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain {
+    display: none;
+  }
+}
