@@ -23,6 +23,13 @@ export function Nav() {
         'fixed inset-x-0 top-0 z-50 transition-all duration-500 ' +
         (scrolled ? 'border-b border-hair bg-paper/70 backdrop-blur-md' : 'border-b border-transparent')
       }
+      // Clear the iOS status bar / notch — with viewport-fit=cover a top:0 bar otherwise
+      // slides under the status bar once Safari's toolbar collapses on scroll.
+      style={{
+        paddingTop: 'env(safe-area-inset-top)',
+        paddingLeft: 'env(safe-area-inset-left)',
+        paddingRight: 'env(safe-area-inset-right)',
+      }}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
         <a href="#hero" className="flex items-center gap-2.5" aria-label="Detour — back to top">
