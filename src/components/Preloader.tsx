@@ -49,10 +49,20 @@ export function Preloader() {
     return () => {
       cancelAnimationFrame(raf)
       window.clearTimeout(hardStop)
+    }
+  }, [reduced])
+
+  // Release the scroll lock once loading is done. The overlay animates away but this
+  // component stays mounted, so the unlock must react to `done` — not the effect cleanup.
+  // The cleanup also covers unmount (e.g. navigating away mid-load) so the lock can't leak.
+  useEffect(() => {
+    const unlock = () => {
       document.documentElement.classList.remove('lenis-stopped')
       document.body.style.overflow = ''
     }
-  }, [reduced])
+    if (done) unlock()
+    return unlock
+  }, [done])
 
   return (
     <AnimatePresence>
