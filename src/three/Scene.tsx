@@ -1,18 +1,19 @@
 import { useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
-import { Particles } from './Particles'
+import { Cards } from './Cards'
 import { journey, pointer } from './journey'
 
-// Camera keyframes along the journey (cam 0..1). Off-axis during the problem to feel
-// unsettled; centred and calm by the end.
+// Camera keyframes along the journey (cam 0..1) — it actually travels through the scene:
+// starts inside the swarm, dives into the feed-tunnel, pulls back to reveal it, then settles
+// head-on on the menu and drifts back to the calmest frame. `at` matches the journey's `cam`.
 const CAM_STOPS: { at: number; pos: [number, number, number] }[] = [
-  { at: 0.0, pos: [0.0, 0.25, 12.2] }, // hero — far, calm
-  { at: 0.2, pos: [0.4, -0.2, 5.2] }, //  problem — dive INTO the tunnel
-  { at: 0.4, pos: [-0.35, 0.12, 9.2] }, // idea — pull out as the light ignites
-  { at: 0.6, pos: [0.0, 0.05, 9.2] }, //  features
-  { at: 0.82, pos: [0.0, 0.2, 10.8] }, // feeling — begin the pull-back
-  { at: 1.0, pos: [0.0, 0.45, 13.8] }, //  cta — pull back to reveal the whole galaxy
+  { at: 0.0, pos: [0.0, 0.2, 6.5] }, //  hero — inside the swarm
+  { at: 0.33, pos: [0.35, -0.1, 2.5] }, // problem — dive into the feed-tunnel
+  { at: 0.5, pos: [-0.2, 0.12, 9.5] }, //  idea — pull back to reveal, world warms
+  { at: 0.72, pos: [0.0, 0.0, 9.0] }, //   features — settle head-on on the menu
+  { at: 0.86, pos: [0.0, 0.1, 9.6] }, //   feeling — drift back gently
+  { at: 1.0, pos: [0.0, 0.25, 10.6] }, //  cta — calmest, most spacious frame
 ]
 
 function sampleCam(t: number, out: THREE.Vector3) {
@@ -165,7 +166,7 @@ function WarmGlow() {
   )
 }
 
-export function Scene({ count }: { count: number }) {
+export function Scene({ count, motion = 1 }: { count: number; motion?: number }) {
   const { camera, gl } = useThree()
   const camTarget = useRef(new THREE.Vector3())
   const lookTarget = useRef(new THREE.Vector3(0, 0, 0))
@@ -186,8 +187,8 @@ export function Scene({ count }: { count: number }) {
     lookTarget.current.set(pointer.x * 0.3, -pointer.y * 0.2 + 0.05, 0)
     camera.lookAt(lookTarget.current)
 
-    // a slow, disorienting roll while we're inside the cold storm
-    const roll = journey.chaos * (0.09 + 0.05 * Math.sin(state.clock.elapsedTime * 0.5))
+    // a slow, disorienting roll while we're inside the feed-tunnel (only during chaos)
+    const roll = journey.chaos * (0.09 + 0.05 * Math.sin(state.clock.elapsedTime * 0.5)) * motion
     camera.rotateZ(roll)
   })
 
@@ -195,7 +196,7 @@ export function Scene({ count }: { count: number }) {
     <>
       <Backdrop />
       <WarmGlow />
-      <Particles count={count} />
+      <Cards count={count} motion={motion} />
     </>
   )
 }

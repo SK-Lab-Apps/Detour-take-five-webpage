@@ -8,6 +8,7 @@ export const C = {
   cool: new THREE.Color('#dfe1e2'),
   coolDeep: new THREE.Color('#b9c0c6'),
   ink: new THREE.Color('#2a1f18'),
+  cream: new THREE.Color('#f7ebd0'),
   terracotta: new THREE.Color('#d2643a'),
   terracottaDeep: new THREE.Color('#a84a26'),
   mustard: new THREE.Color('#c99a2b'),
