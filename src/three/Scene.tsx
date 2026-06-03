@@ -13,7 +13,7 @@ const CAM_STOPS: { at: number; pos: [number, number, number] }[] = [
   { at: 0.5, pos: [-0.2, 0.12, 9.5] }, //  idea — pull back to reveal, world warms
   { at: 0.72, pos: [0.0, 0.0, 9.0] }, //   features — settle head-on on the menu
   { at: 0.86, pos: [0.0, 0.1, 9.6] }, //   feeling — drift back gently
-  { at: 1.0, pos: [0.0, 0.25, 10.6] }, //  cta — calmest, most spacious frame
+  { at: 1.0, pos: [0.0, 0.3, 11.4] }, //   cta — pull back into the calm, near-empty space
 ]
 
 function sampleCam(t: number, out: THREE.Vector3) {

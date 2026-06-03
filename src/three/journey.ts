@@ -16,6 +16,8 @@ import gsap from 'gsap'
  *   chaos   swarm(0) → vortex/tunnel(1); the frantic "pull" of the feed   (peaks at the problem)
  *   warmth  colour grade, cold steel(0) → warm paper/tier(1)
  *   gather  scattered cards(0) → assembled menu of tokens(1)
+ *   settle  assembled menu(0) → "put the phone down": the menu dissolves and only a few soft
+ *           warm motes remain, breathing, in a calm near-empty space (the final CTA state)
  *   cam     camera path parameter, hero(0) → final calm(1)
  */
 export interface Journey {
@@ -23,6 +25,7 @@ export interface Journey {
   chaos: number
   warmth: number
   gather: number
+  settle: number
   cam: number
 }
 
@@ -32,6 +35,7 @@ export const journey: Journey = {
   chaos: 0.12,
   warmth: 0.2,
   gather: 0,
+  settle: 0,
   cam: 0,
 }
 
@@ -79,9 +83,10 @@ export function createJourneyTimeline(beats: Beats = BEAT_FALLBACK): gsap.core.T
   // ── Beat 4 · The menu: cards resolve into calm tier rows of tokens. The payoff. ──
   tl.to(journey, { chaos: 0, warmth: 0.92, gather: 1, cam: 0.72, duration: b.features - b.idea }, b.idea)
 
-  // ── Beat 5 · Settle: golden-hour calm as the menu breathes. ──
+  // ── Beat 5 · Settle: golden-hour calm. The menu holds through Feeling… ──
   tl.to(journey, { warmth: 1, cam: 0.86, duration: b.feeling - b.features }, b.features)
-  tl.to(journey, { cam: 1, duration: b.cta - b.feeling }, b.feeling)
+  // …then "put the phone down": the menu dissolves into a few breathing warm motes by the CTA.
+  tl.to(journey, { settle: 1, cam: 1, duration: b.cta - b.feeling }, b.feeling)
 
   return tl
 }
