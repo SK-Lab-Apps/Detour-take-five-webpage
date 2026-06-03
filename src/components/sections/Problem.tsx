@@ -6,7 +6,7 @@ export function Problem() {
   const { problem } = site
   return (
     <Section id="problem">
-      <div className="max-w-3xl">
+      <div className="text-haze max-w-3xl">
         <Reveal>
           <Eyebrow>{problem.eyebrow}</Eyebrow>
         </Reveal>

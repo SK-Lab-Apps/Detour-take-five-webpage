@@ -35,22 +35,27 @@ export default function Canvas3D({ profile }: { profile: DeviceProfile }) {
       }}
       camera={{ fov: 38, near: 0.1, far: 100, position: [0, 0.25, 11.5] }}
     >
-      {/* lighter, calmer motion on low-end / mobile (count is already trimmed in the profile) */}
-      <Scene count={profile.particleCount} motion={profile.tier === 'high' ? 1 : 0.6} />
+      {/* lighter, calmer motion + a dimmer, less busy field on low-end / mobile
+          (particle count is already trimmed in the profile) */}
+      <Scene
+        count={profile.particleCount}
+        motion={profile.tier === 'high' ? 1 : 0.5}
+        intensity={profile.tier === 'high' ? 1 : 0.72}
+      />
 
       {profile.postprocessing && (
         <EffectComposer multisampling={0}>
           {/* gentle warm glow — threshold above paper luminance so only the warm
               light (and brightest token cores) bloom, never the paper background */}
           <Bloom
-            intensity={0.85}
-            luminanceThreshold={0.9}
-            luminanceSmoothing={0.3}
+            intensity={0.7}
+            luminanceThreshold={0.92}
+            luminanceSmoothing={0.35}
             mipmapBlur
-            radius={0.72}
+            radius={0.82}
           />
           {/* subtle depth of field — focus stays on the menu; never a blurry mess */}
-          <DepthOfField target={dofTarget} focalLength={0.02} bokehScale={1.8} height={480} />
+          <DepthOfField target={dofTarget} focalLength={0.018} bokehScale={1.5} height={480} />
           <Vignette eskil={false} offset={0.25} darkness={0.55} />
         </EffectComposer>
       )}

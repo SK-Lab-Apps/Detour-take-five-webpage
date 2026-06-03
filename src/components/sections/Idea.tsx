@@ -7,7 +7,7 @@ export function Idea() {
   return (
     <Section id="idea">
       <div className="grid items-center gap-12 lg:grid-cols-2">
-        <div>
+        <div className="text-haze">
           <Reveal>
             <Eyebrow>{idea.eyebrow}</Eyebrow>
           </Reveal>

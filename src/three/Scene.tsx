@@ -35,14 +35,15 @@ function sampleCam(t: number, out: THREE.Vector3) {
   out.set(...s[s.length - 1].pos)
 }
 
-// Warm / cool grades for the graded backdrop.
+// Warm / cool grades for the graded backdrop. The "cool" end is a warm, desaturated greige
+// (premium muted paper) rather than a cold blue-grey, so the early beats never feel cheap.
 const GRADE = {
-  warmTop: new THREE.Color('#f7edd8'),
-  warmBottom: new THREE.Color('#ecd3a9'),
+  warmTop: new THREE.Color('#f8eeda'),
+  warmBottom: new THREE.Color('#edd4ab'),
   warmGlow: new THREE.Color('#f7c79a'),
-  coolTop: new THREE.Color('#dde2e6'),
-  coolBottom: new THREE.Color('#bfc7cf'),
-  coolGlow: new THREE.Color('#9fb0bd'),
+  coolTop: new THREE.Color('#e7e3da'),
+  coolBottom: new THREE.Color('#cbc5b9'),
+  coolGlow: new THREE.Color('#b4ab9d'),
 }
 
 /** A camera-filling gradient backdrop with a soft central glow + vignette → depth, not flat. */
@@ -148,8 +149,8 @@ function WarmGlow() {
     if (!ref.current) return
     ref.current.quaternion.copy(camera.quaternion)
     const k = 1 - Math.pow(0.002, dt)
-    // "ignition": a warm light is born once warmth crosses out of the cold storm
-    const ignite = THREE.MathUtils.clamp((journey.warmth - 0.2) * 1.5, 0, 1)
+    // "ignition": a warm light is born once warmth crosses out of the cool storm
+    const ignite = THREE.MathUtils.clamp((journey.warmth - 0.3) * 1.7, 0, 1)
     const target = ignite * (0.32 + 0.4 * journey.gather) * 0.46
     const o = mat.uniforms.uOpacity
     o.value += (target - o.value) * k
@@ -166,7 +167,15 @@ function WarmGlow() {
   )
 }
 
-export function Scene({ count, motion = 1 }: { count: number; motion?: number }) {
+export function Scene({
+  count,
+  motion = 1,
+  intensity = 1,
+}: {
+  count: number
+  motion?: number
+  intensity?: number
+}) {
   const { camera, gl } = useThree()
   const camTarget = useRef(new THREE.Vector3())
   const lookTarget = useRef(new THREE.Vector3(0, 0, 0))
@@ -180,6 +189,9 @@ export function Scene({ count, motion = 1 }: { count: number; motion?: number })
     gl.setClearColor(bg, 1)
 
     sampleCam(journey.cam, camTarget.current)
+    // on calmer (mobile) profiles, don't let the camera dive deep into the tunnel — it reads
+    // as "too much" on a small screen; keep a gentler, more premium distance.
+    if (motion < 1) camTarget.current.z = Math.max(camTarget.current.z, 5.4)
     camTarget.current.x += pointer.x * 0.55
     camTarget.current.y += -pointer.y * 0.34
     camera.position.lerp(camTarget.current, k)
@@ -196,7 +208,7 @@ export function Scene({ count, motion = 1 }: { count: number; motion?: number })
     <>
       <Backdrop />
       <WarmGlow />
-      <Cards count={count} motion={motion} />
+      <Cards count={count} motion={motion} intensity={intensity} />
     </>
   )
 }

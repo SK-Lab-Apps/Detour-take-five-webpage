@@ -152,6 +152,7 @@ const frag = /* glsl */ `
   precision highp float;
   uniform vec3 uCold;
   uniform vec3 uCream;
+  uniform float uAlpha;   // global opacity (dimmed on mobile for a calmer, premium feel)
 
   varying vec2  vP;
   varying vec2  vHalf;
@@ -196,21 +197,30 @@ const frag = /* glsl */ `
     vec3 moteCol = mix(uCream, vec3(1.0, 0.93, 0.82), 0.5);
     col = mix(col, moteCol, vMote);
 
-    float swarmA = 0.42 + 0.40 * vSeed;
-    float menuA  = mix(0.16, 0.95, vHero);
+    float swarmA = 0.40 + 0.40 * vSeed;
+    float menuA  = mix(0.13, 0.95, vHero);
     float a = mix(swarmA, menuA, vGather);
 
     float alpha = fill * a + halo * a * 0.5 * (0.4 + 0.6 * vGather);
     // motes lean on their soft halo; lift overall presence so the calm space still breathes
     alpha = mix(alpha, fill * 0.55 + halo * 0.4, vMote);
     alpha *= 1.0 - 0.35 * vDepth;
+    alpha *= uAlpha;
     if (alpha < 0.004) discard;
 
     gl_FragColor = vec4(col, alpha);
   }
 `
 
-export function Cards({ count, motion = 1 }: { count: number; motion?: number }) {
+export function Cards({
+  count,
+  motion = 1,
+  intensity = 1,
+}: {
+  count: number
+  motion?: number
+  intensity?: number
+}) {
   const matRef = useRef<THREE.ShaderMaterial>(null)
 
   const geo = useMemo(() => {
@@ -297,6 +307,7 @@ export function Cards({ count, motion = 1 }: { count: number; motion?: number })
       uWarmth: { value: journey.warmth },
       uSize: { value: 0.5 },
       uMotion: { value: 1 }, // set from the `motion` prop each frame (see useFrame)
+      uAlpha: { value: 1 }, // set from the `intensity` prop each frame
       uPointer: { value: new THREE.Vector2(0, 0) },
       uCold: { value: C.steel.clone() },
       uCream: { value: C.cream.clone() },
@@ -320,6 +331,7 @@ export function Cards({ count, motion = 1 }: { count: number; motion?: number })
     const u = uniforms
     u.uTime.value += dt
     u.uMotion.value = motion
+    u.uAlpha.value = intensity
     const k = 1 - Math.pow(0.0016, dt) // critically-damped easing toward the scroll state
     u.uChaos.value += (journey.chaos - u.uChaos.value) * k
     u.uGather.value += (journey.gather - u.uGather.value) * k

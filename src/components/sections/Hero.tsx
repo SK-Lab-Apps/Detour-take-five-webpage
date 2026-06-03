@@ -22,6 +22,7 @@ export function Hero() {
       data-section="hero"
       className="relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 text-center"
     >
+      <div className="text-haze flex flex-col items-center">
       <motion.div {...fade(0.1)} className="mb-7">
         <img
           src="/brand/app-icon.png"
@@ -60,6 +61,7 @@ export function Hero() {
       <motion.div {...fade(0.62)} className="mt-9">
         <StoreBadges className="justify-center" />
       </motion.div>
+      </div>
 
       {/* scroll hint */}
       <motion.div

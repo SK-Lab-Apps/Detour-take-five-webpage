@@ -29,11 +29,11 @@ export interface Journey {
   cam: number
 }
 
-/** Initial state = Beat 1, the hero swarm: a busy, cool, dispersed feed. */
+/** Initial state = Beat 1, the hero swarm: a busy, cool-ish, dispersed feed. */
 export const journey: Journey = {
   p: 0,
   chaos: 0.12,
-  warmth: 0.2,
+  warmth: 0.28,
   gather: 0,
   settle: 0,
   cam: 0,
@@ -74,8 +74,8 @@ export function createJourneyTimeline(beats: Beats = BEAT_FALLBACK): gsap.core.T
   // p advances linearly the whole way for any code that wants raw progress.
   tl.to(journey, { p: 1, ease: 'none', duration: 1 }, 0)
 
-  // ── Beat 2 · The pull: dragged into the cold, frantic feed-tunnel; chaos peaks. ──
-  tl.to(journey, { chaos: 1, warmth: 0, gather: 0, cam: 0.33, duration: b.problem - b.hero }, b.hero)
+  // ── Beat 2 · The pull: dragged into the cool, frantic feed-tunnel; chaos peaks. ──
+  tl.to(journey, { chaos: 1, warmth: 0.08, gather: 0, cam: 0.33, duration: b.problem - b.hero }, b.hero)
 
   // ── Beat 3 · The detour: motion decelerates, the world warms, cards begin to organize. ──
   tl.to(journey, { chaos: 0.35, warmth: 0.55, gather: 0.45, cam: 0.5, duration: b.idea - b.problem }, b.problem)
