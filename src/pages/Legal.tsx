@@ -116,7 +116,9 @@ function LegalHeader() {
           <span className="font-display text-lg tracking-tight text-ink">Detour</span>
         </Link>
         {placeholder ? (
-          <span className="text-sm text-ink-muted">← Back to home</span>
+          <Link to="/" className="text-sm text-ink-soft transition-colors hover:text-terracotta">
+            ← Back to home
+          </Link>
         ) : (
           <a
             href={appStore}
