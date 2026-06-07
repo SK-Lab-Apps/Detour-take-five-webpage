@@ -10,7 +10,7 @@
 export const LEGAL = {
   appName: 'Detour — Take Five',
   // TODO(you): your real support email (shown on both pages).
-  contactEmail: 'support@detourtakefive.app',
+  contactEmail: 'sklabs1905@gmail.com',
   // TODO(you): the jurisdiction whose laws govern your terms.
   governingLaw: 'India',
   // TODO(you): bump when you change either document.
