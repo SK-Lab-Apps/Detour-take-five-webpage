@@ -20,7 +20,7 @@ export const site = {
   // TODO(you): paste your real store URLs. Leaving the {{...}} placeholder keeps
   // the button disabled-looking and harmless until you swap it.
   links: {
-    appStore: '{{APP_STORE_URL}}',
+    appStore: 'https://apps.apple.com/us/app/detour-take-five/id6774246848',
     playStore: '{{PLAY_STORE_URL}}',
     // Optional secondary footer links. Leave '' to hide.
     // (Terms & Privacy are built-in pages at /terms and /privacy — see src/content/legal.ts.)
