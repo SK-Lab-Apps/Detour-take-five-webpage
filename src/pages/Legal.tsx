@@ -111,9 +111,9 @@ function LegalHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-hair bg-paper/70 backdrop-blur-md">
       <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-3.5 sm:px-10">
-        <Link to="/" className="flex items-center gap-2.5" aria-label="Back to Detour home">
+        <Link to="/" className="flex items-center gap-2.5" aria-label="Back to Instead home">
           <img src="/brand/app-icon.png" alt="" width={32} height={32} className="h-8 w-8 rounded-lg border border-hair" />
-          <span className="font-display text-lg tracking-tight text-ink">Detour</span>
+          <span className="font-display text-lg tracking-tight text-ink">Instead</span>
         </Link>
         {placeholder ? (
           <Link to="/" className="text-sm text-ink-soft transition-colors hover:text-terracotta">

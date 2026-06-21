@@ -53,7 +53,7 @@ export function Features() {
         </div>
 
         <Reveal delay={0.1} className="order-1 lg:order-2">
-          <DeviceFrame src="/screens/today-menu.png" alt="Detour — Today's Menu screen" />
+          <DeviceFrame src="/screens/today-menu.png" alt="Instead — Today's Menu screen" />
         </Reveal>
       </div>
 

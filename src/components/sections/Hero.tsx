@@ -26,7 +26,7 @@ export function Hero() {
       <motion.div {...fade(0.1)} className="mb-7">
         <img
           src="/brand/app-icon.png"
-          alt="Detour app icon — a folded menu with a clock at five to twelve"
+          alt="Instead app icon — a folded menu with a clock at five to twelve"
           width={88}
           height={88}
           className="h-20 w-20 rounded-[1.25rem] border border-hair shadow-paper sm:h-22 sm:w-22"

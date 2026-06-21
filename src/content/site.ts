@@ -9,12 +9,12 @@
  */
 
 export const site = {
-  name: 'Detour',
-  fullName: 'Detour — Take Five',
-  tagline: 'A menu of things you’d rather do than scroll.',
+  name: 'Instead',
+  fullName: 'Instead: Things To Do',
+  tagline: 'Beat the urge to scroll.',
   description:
-    'Detour is a dopamine menu: a short, hand-written list of small real-life detours ' +
-    'you’d rather do than doomscroll. Decide while you’re calm, then take five.',
+    'Instead is a dopamine menu: a short, hand-written list of small real-life detours ' +
+    'you’d rather do than doomscroll. Decide while you’re calm, then beat the urge to scroll.',
 
   // ── Store links ───────────────────────────────────────────────────────────
   // TODO(you): paste your real store URLs. Leaving the {{...}} placeholder keeps
@@ -56,9 +56,9 @@ export const site = {
   // ── Section copy ──────────────────────────────────────────────────────────
   hero: {
     eyebrow: 'Est. Today',
-    title: 'Detour',
-    sub: 'Take Five',
-    line: 'A menu of things you’d rather do than scroll.',
+    title: 'Instead',
+    sub: 'Things To Do',
+    line: 'Beat the urge to scroll.',
     cta: 'Get the app',
     scrollHint: 'Scroll to begin',
   },
@@ -120,7 +120,7 @@ export const site = {
         key: 'reflect',
         title: 'One gentle ping',
         body:
-          'An optional evening reflection around nine — a quiet nudge to take five before the ' +
+          'An optional evening reflection around nine — a quiet nudge to step away before the ' +
           'day folds shut. No badges screaming at you.',
       },
       {
@@ -181,18 +181,18 @@ export const site = {
   },
 
   finalCta: {
-    eyebrow: 'Take five',
+    eyebrow: 'Beat the urge',
     title: 'Your menu is waiting.',
     body: 'Two minutes to build it. A lifetime of small, better detours.',
-    cta: 'Get Detour',
+    cta: 'Get Instead',
     foot: 'Free to start.',
   },
 
   footer: {
-    tagline: 'Take five.',
+    tagline: 'Beat the urge to scroll.',
     madeBy: '— made by you —',
     // TODO(you): year auto-updates; edit the rest as you like.
-    legal: 'Detour — Take Five',
+    legal: 'Instead: Things To Do',
   },
 } as const
 

@@ -15,7 +15,7 @@ export function FinalCTA() {
       <Reveal>
         <img
           src="/brand/app-icon.png"
-          alt="Detour app icon"
+          alt="Instead app icon"
           width={80}
           height={80}
           className="mb-8 h-20 w-20 rounded-[1.25rem] border border-hair shadow-paper"

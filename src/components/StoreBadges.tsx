@@ -22,9 +22,11 @@ function BadgeShell({
     return (
       <button
         type="button"
-        aria-label={`${label} — link coming soon`}
-        title="Add your store link in src/content/site.ts"
-        className={className + ' cursor-not-allowed opacity-90'}
+        disabled
+        aria-disabled="true"
+        aria-label={`${label} — coming soon`}
+        title="Coming soon"
+        className={className + ' cursor-not-allowed opacity-40 grayscale'}
         onClick={(e) => e.preventDefault()}
       >
         {children}

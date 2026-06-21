@@ -32,9 +32,9 @@ export function Nav() {
       }}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
-        <a href="#hero" className="flex items-center gap-2.5" aria-label="Detour — back to top">
+        <a href="#hero" className="flex items-center gap-2.5" aria-label="Instead — back to top">
           <img src="/brand/app-icon.png" alt="" width={32} height={32} className="h-8 w-8 rounded-lg border border-hair" />
-          <span className="font-display text-lg tracking-tight text-ink">Detour</span>
+          <span className="font-display text-lg tracking-tight text-ink">Instead</span>
         </a>
 
         {ctaProps.as === 'a' ? (

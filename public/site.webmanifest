@@ -1,6 +1,6 @@
 {
-  "name": "Detour — Take Five",
-  "short_name": "Detour",
+  "name": "Instead: Things To Do",
+  "short_name": "Instead",
   "description": "A dopamine menu app to stop doomscrolling — a short list of small real-life things to do instead of scrolling.",
   "start_url": "/",
   "display": "standalone",

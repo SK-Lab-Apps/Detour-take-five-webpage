@@ -1,5 +1,5 @@
 /**
- * legal.ts — Terms of Service + Privacy Policy content, written for Detour — Take Five.
+ * legal.ts — Terms of Service + Privacy Policy content, written for Instead: Things To Do.
  *
  * ✏️  EDIT the three constants below before launch (contact email, jurisdiction, date),
  *     then tweak any wording in `terms` / `privacy` as you like. This is general,
@@ -8,7 +8,7 @@
  */
 
 export const LEGAL = {
-  appName: 'Detour — Take Five',
+  appName: 'Instead: Things To Do',
   // TODO(you): your real support email (shown on both pages).
   contactEmail: 'sklabs1905@gmail.com',
   // TODO(you): the jurisdiction whose laws govern your terms.

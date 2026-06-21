@@ -75,7 +75,7 @@ export function Preloader() {
         >
           <motion.img
             src="/brand/app-icon.png"
-            alt="Detour"
+            alt="Instead"
             width={72}
             height={72}
             className="h-18 w-18 rounded-2xl border border-hair shadow-paper"
