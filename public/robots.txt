@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://detourtakefive.com/sitemap.xml
+Sitemap: https://insteadthingstodo.com/sitemap.xml

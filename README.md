@@ -1,6 +1,6 @@
-# Detour — Take Five · Marketing site
+# Instead — Things to do · Marketing site
 
-A standalone, static, single-page marketing site for the **Detour: Take Five** mobile app —
+A standalone, static, single-page marketing site for the **Instead: Things to do** mobile app —
 a *dopamine menu* that helps you break the doomscroll loop. It's a fully immersive,
 scroll-controlled **3D experience**: one persistent WebGL canvas behind the page tells a
 continuous story (calm → the cold doomscroll trap → the warm, assembled "menu") as you scroll
@@ -126,7 +126,7 @@ Almost everything you'll want to edit lives in **one file**:
   `robots.txt`, and `sitemap.xml` are all set in `index.html` / `public/`.
 - **OG preview image**: `public/og.png` (1200×630). To regenerate after a copy change, open
   `scripts/og-template.html` in a browser and screenshot it at 1200×630, or just replace the PNG.
-- Update the canonical/OG/sitemap URL (currently `https://detourtakefive.app/`) to your real
+- Update the canonical/OG/sitemap URL (currently `https://insteadthingstodo.app/`) to your real
   domain in `index.html`, `public/sitemap.xml`, and `public/robots.txt`.
 
 ---
@@ -150,7 +150,7 @@ No env vars or secrets are required.
 3. **Rating** (`social.rating`) — real star score + review count once live.
 4. **Press / "as seen in"** (`social.press`) — real logos/mentions (currently text placeholders).
 5. **Feeling stats** (`feeling.stats`) — swap for real numbers if you have them.
-6. **Domain** — replace `https://detourtakefive.app/` in `index.html`, `sitemap.xml`,
+6. **Domain** — replace `https://insteadthingstodo.app/` in `index.html`, `sitemap.xml`,
    `robots.txt`.
 7. **Legal pages** — set `contactEmail`, `governingLaw`, and `lastUpdated` in
    `src/content/legal.ts` (and have a lawyer review the wording for your jurisdiction).
